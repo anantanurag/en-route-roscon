@@ -15,7 +15,7 @@ int main(int argc,char** argv)
 	{
 		now = time(0);
 		ltm = localtime(&now);
-		ROS_INFO_STREAM("Time: "<< 1 + ltm->tm_hour << ":" << 1 + ltm->tm_min << ":"<< 1 + ltm->tm_sec);
+		ROS_INFO_STREAM("Time: "<<  ltm->tm_hour << ":" <<  ltm->tm_min << ":"<<  ltm->tm_sec);
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
