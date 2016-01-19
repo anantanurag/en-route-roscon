@@ -21,25 +21,30 @@ void Stopper::moveForward()
 
 void Stopper::scanCallback(const sensor_msgs::LaserScan::ConstPtr& scan)
 {
-	int minIndex = ceil(MIN_SCAN_ANGLE_RAD - scan->angle_min) / (scan->angle_increment);
-	int maxIndex = floor(MAX_SCAN_ANGLE_RAD - scan->angle_min) / (scan->angle_increment);
-
-	float closestRange = scan->ranges[minIndex];
-	for(int currIndex = minIndex + 1; currIndex <= maxIndex; currIndex++)
+	int minIndex = ceil((MIN_SCAN_ANGLE_RAD));
+	int maxIndex = floor((MAX_SCAN_ANGLE_RAD));
+	int min_angle_Index = -1;
+	float closestRange = scan->ranges[0];
+	printf("%d and %d\n",minIndex, maxIndex );
+	printf("%f\n", scan->angle_min);
+	for(long long int currIndex = 1; currIndex <= maxIndex - minIndex; currIndex++)
 	{
+		// printf("%f\n", scan->ranges[currIndex]);
 		if(scan->ranges[currIndex] < closestRange)
 		{
 			closestRange = scan->ranges[currIndex];
+			min_angle_Index = currIndex;
 		}
 	}
 	ROS_INFO_STREAM("Closest range: " << closestRange);
+	printf("@ %d\n", min_angle_Index + min_angle_Index);
 
 	if(closestRange < MIN_PROXIMITY_RANGE_M)
 	{
 		ROS_INFO("Stop!");
 		keepMoving = false;
 		geometry_msgs::Twist msg;
-		msg.linear.x = -100;
+		msg.linear.x = 0;
 		msg.angular.z = 100;
 		commandPub.publish(msg);
 		// ros::spinOnce();
